@@ -1,2 +1,44 @@
-<h1>Welcome, <%= current_user.role %>!</h1>
+<h1>Welcome to Clinic</h1>
 
+<h2>Login as:</h2>
+<%= form_tag login_as_path, method: :get do %>
+  <div>
+    <%= label_tag :phone, "Phone" %>
+    <%= text_field_tag :phone, "+380987654322" %>
+  </div>
+  <div>
+    <%= submit_tag "Login as Admin" %>
+  </div>
+<% end %>
+
+<%= form_tag login_as_path, method: :get do %>
+  <div>
+    <%= label_tag :phone, "Phone" %>
+    <%= text_field_tag :phone, "+380671234568" %>
+  </div>
+  <div>
+    <%= submit_tag "Login as Patient" %>
+  </div>
+<% end %>
+
+<%= form_tag login_as_path, method: :get do %>
+  <div>
+    <%= label_tag :phone, "Phone" %>
+    <%= text_field_tag :phone, "+380501234569" %>
+  </div>
+  <div>
+    <%= submit_tag "Login as Doctor" %>
+  </div>
+<% end %>
+
+<% if current_user %>
+  <p>Logged in as <%= current_user.phone %> (Role: <%= current_user.role %>)</p>
+  <% if current_user.role == 'patient' %>
+    <%= link_to 'Book Appointment', new_appointment_doctor_path %>
+  <% elsif current_user.role == 'doctor' %>
+    <%= link_to 'Manage Appointments', appointment_doctors_path %>
+  <% elsif current_user.role == 'admin' %>
+    <%= link_to 'Manage Users', admin_users_path %>
+  <% end %>
+  <%= link_to 'Logout', destroy_user_session_path, method: :delete %>
+<% end %>

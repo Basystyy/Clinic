@@ -1,0 +1,11 @@
+<h1>Doctor</h1>
+<% if @doctor %>
+  <p><strong>Name:</strong> <%= @doctor.name %></p>
+  <p><strong>Phone:</strong> <%= @doctor.phone %></p>
+  <p><strong>Category:</strong> <%= @doctor.category&.name %></p>
+  <%= link_to 'Edit', edit_doctor_path(@doctor) %> |
+  <%= link_to 'Back', doctors_path %>
+<% else %>
+  <p>Doctor not found.</p>
+  <%= link_to 'Back', doctors_path %>
+<% end %>

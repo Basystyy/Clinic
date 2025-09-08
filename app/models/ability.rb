@@ -1,19 +1,18 @@
-frozen_string_literal: true
-
 class Ability
   include CanCan::Ability
 
   def initialize(user)
     user ||= User.new # Гость
+    user.role ||= 'patient' # По умолчанию пациент
 
     if user.admin?
-      can :manage, :all # Админ может всё
+      can :manage, :all
     elsif user.doctor?
-      can :read, User # Доктор видит пациентов
-      can :update, Appointment, doctor_id: user.id # Доктор управляет своими записями
+      can :read, AppointmentDoctor, doctor_id: user.doctors.pluck(:id)
+      can :manage, AppointmentDoctor, doctor_id: user.doctors.pluck(:id) # manage включает edit
     else
-      can :read, Doctor # Пациент видит врачей
-      can :create, Appointment # Пациент может записаться
+      can :read, AppointmentDoctor, user_id: user.id
+      can :create, AppointmentDoctor
     end
   end
 end
