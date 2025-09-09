@@ -2,17 +2,16 @@ class Ability
   include CanCan::Ability
 
   def initialize(user)
-    user ||= User.new # Гость
-    user.role ||= 'patient' # По умолчанию пациент
-
-    if user.admin?
+    if user.is_a?(AdminUser)
       can :manage, :all
-    elsif user.doctor?
-      can :read, AppointmentDoctor, doctor_id: user.doctors.pluck(:id)
-      can :manage, AppointmentDoctor, doctor_id: user.doctors.pluck(:id) # manage включает edit
-    else
-      can :read, AppointmentDoctor, user_id: user.id
+    elsif user.is_a?(Doctor)
+      can :read, User
+      can :manage, AppointmentDoctor
+    elsif user.is_a?(User)
+      can :read, User
       can :create, AppointmentDoctor
+    else
+      can :read, :all
     end
   end
 end

@@ -1,9 +1,14 @@
-unless User.find_by(phone: '+380671234567')
-  User.create!(
-    phone: '+380671234567',
-    password: 'password123',
-    role: 'admin',
-    confirmed_at: Time.current
-  )
-end
-AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
+Category.create(name: 'General Practitioner') unless Category.exists?(id: 1)
+
+User.create(phone: '+380671234568',
+            password: '111111',
+            password_confirmation: '111111')
+
+Doctor.create(phone: '+380501234569',
+              password: '111111',
+              password_confirmation: '111111',
+              category_id: 1)
+
+AdminUser.create(phone: '+380987654322',
+                 password: '111111',
+                 password_confirmation: '111111')
