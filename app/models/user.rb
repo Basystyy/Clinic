@@ -1,9 +1,10 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable,
-          :rememberable, :validatable, :confirmable
+          :rememberable, :validatable
+          authentication_keys: [:phone]
 
-  has_many :appointment_doctors, dependent: :destroy
-  has_many :doctors, through: :appointment_doctors
+  has_many :appointments, dependent: :destroy
+  has_many :doctors, through: :appointments
 
   validates :phone, presence: true, uniqueness: true,
             format: { with: /\A\+380\d{9}\z/,

@@ -1,5 +1,4 @@
 <h1>Doctors</h1>
-<%= link_to 'New Doctor', new_doctor_path %>
 <table>
   <tr>
     <th>Name</th>
@@ -12,11 +11,6 @@
       <td><%= doctor.name %></td>
       <td><%= doctor.phone %></td>
       <td><%= doctor.category.name if doctor.category %></td>
-      <td>
-        <%= link_to 'Show', doctor %>
-        <%= link_to 'Edit', edit_doctor_path(doctor) %>
-        <%= button_to 'Destroy', doctor_path(doctor), method: :delete, form: { data: { turbo: false }, onsubmit: "return confirm('Are you sure?')" } %>
-      </td>
     </tr>
   <% end %>
 </table>

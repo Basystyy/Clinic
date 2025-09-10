@@ -1,11 +1,14 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery with: :exception
-
-  def authenticate_admin!
-    authenticate_user!
-    unless current_user && current_user.admin?
-      flash[:alert] = "You must be an admin to access this page."
-      redirect_to root_path
+  # Подменим current_user для CanCanCan
+  def current_ability
+    if current_admin_user
+      Ability.new(current_admin_user)
+    elsif current_doctor
+      Ability.new(current_doctor)
+    elsif current_user
+      Ability.new(current_user)
+    else
+      Ability.new(nil)
     end
   end
 end

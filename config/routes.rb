@@ -1,16 +1,15 @@
 Rails.application.routes.draw do
-  devise_for :admin_users, ActiveAdmin::Devise.config
-  devise_for :users
-  devise_for :doctors
-  root "home#index"
-  get 'login_as', to: 'home#login_as'
-  namespace :admin do
-    resources :users
-    resources :doctors
-    resources :admin_users
-  end
-  resources :doctors
-  resources :appointment_doctors
 
+  devise_for :users, :doctors, :admin_users
+
+  root "home#index"
+
+  resources :doctors, :appointments
+  resources :patient_cabinets, only: [:index]
+  resources :doctor_cabinets, only: [:index]
+  resources :admin_cabinets, only: [:index]
+
+  get 'login_as', to: 'home#login_as'
+  
   get "up" => "rails/health#show", as: :rails_health_check
 end
