@@ -1,20 +1,29 @@
 <h1>Welcome to Clinic</h1>
 
-<%= form_with url: login_as_path, method: :get do |form| %>
-  <%= form.label :phone, "Phone" %>
-  <%= form.text_field :phone %>
-  <%= form.submit "Login" %>
+<% if !admin_user_signed_in? && !doctor_signed_in? && !user_signed_in? %>
+  <%= form_with url: login_as_path, method: :post do |form| %>
+    <%= form.label :phone, "Phone" %>
+    <%= form.text_field :phone %>
+
+    <%= form.label :password, "Password" %>
+    <%= form.password_field :password %>
+
+    <%= form.submit "Login" %>
+  <% end %>
+
+  <%= link_to "Register as User", new_user_registration_path %>
 <% end %>
 
-<%= link_to "Register as User", new_user_registration_path %>
-
 <h2>Doctors</h2>
-
 <% @doctors.each do |doctor| %>
-  <p><%= doctor.name %> - <%= doctor.category.name %> - Slots:<%= doctor.appointments.where(closed: false).count %>/10</p>
-  <% if current_user && !current_user.is_a?(Doctor) && doctor.appointments.where(closed: false).count < 10 %>
+  <p>
+    <%= doctor.name %> - <%= doctor.category.name %> -
+    Slots: <%= doctor.appointments.where(closed: false).count %>/10
+  </p>
+
+  <% if user_signed_in? && doctor.appointments.where(closed: false).count < 10 %>
     <%= link_to "Book", new_appointment_path(doctor_id: doctor.id), method: :get %>
-  <% elsif current_user && doctor.appointments.where(closed: false).count >= 10 %>
+  <% elsif user_signed_in? && doctor.appointments.where(closed: false).count >= 10 %>
     <p>No free slots</p>
   <% end %>
 <% end %>

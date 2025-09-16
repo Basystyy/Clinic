@@ -1,23 +1,40 @@
 class HomeController < ApplicationController
+  before_action :set_doctors, only: :index
   
-  def index
-    @doctors = Doctor.all.includes(:category)
+  def login_as
+    phone    = params[:phone]
+    password = params[:password]
+
+    user = AdminUser.find_by(phone: phone) ||
+           Doctor.find_by(phone: phone)    ||
+           User.find_by(phone: phone)
+
+    if user && user.valid_password?(password)
+      sign_in(user)
+
+      if user.is_a?(AdminUser)
+        redirect_to admin_root_path
+      elsif user.is_a?(Doctor)
+        redirect_to doctor_cabinets_path
+      else
+        redirect_to root_path
+      end
+    else
+      flash[:alert] = "Неверный телефон или пароль"
+      redirect_to root_path
+    end
   end
 
-  def login_as
-    phone = params[:phone]
+  def logout
+    sign_out(:user) if user_signed_in?
+    sign_out(:doctor) if doctor_signed_in?
+    sign_out(:admin_user) if admin_user_signed_in?
+    redirect_to root_path, notice: "Logged out successfully"
+  end
 
-    if (admin = AdminUser.find_by(phone: phone))
-      sign_in(:admin_user, admin)
-      redirect_to admin_cabinets_path, notice: "Вошли как администратор"
-    elsif (doctor = Doctor.find_by(phone: phone))
-      sign_in(:doctor, doctor)
-      redirect_to doctor_cabinets_path, notice: "Вошли как врач"
-    elsif (user = User.find_by(phone: phone))
-      sign_in(:user, user)
-      redirect_to patient_cabinets_path, notice: "Вошли как пациент"
-    else
-      redirect_to root_path, alert: "Пользователь с таким телефоном не найден"
-    end
+  private
+
+  def set_doctors
+    @doctors = Doctor.includes(:category).all
   end
 end

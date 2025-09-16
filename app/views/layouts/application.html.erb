@@ -2,28 +2,24 @@
 <html>
   <head>
     <title>Clinic</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
-
-    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
+    <%= stylesheet_link_tag "application", media: "all" %>
+    <%= javascript_include_tag "application", defer: true %>
   </head>
 
   <body>
-    <% if user_signed_in? %>
-      <p>Debug: User is signed in</p>
-      <%= button_to "Logout", destroy_user_session_path, method: :delete, data: { turbo_confirm: "Are you sure?" } %>
-    <% else %>
-      <p>Debug: User is NOT signed in</p>
-      <%= link_to "Login", new_user_session_path %>
-    <% end %>
+    <nav>
+      <% if admin_user_signed_in? || doctor_signed_in? || user_signed_in? %>
+        <%= button_to "Logout", logout_path, method: :delete, data: { confirm: "Are you sure?" } %>
+      <% end %>
+    </nav>
 
     <% if notice %>
-      <div class="notice"><%= notice %></div>
+      <p class="notice"><%= notice %></p>
     <% end %>
     <% if alert %>
-      <div class="alert"><%= alert %></div>
+      <p class="alert"><%= alert %></p>
     <% end %>
 
     <%= yield %>
