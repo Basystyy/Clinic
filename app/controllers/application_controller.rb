@@ -1,5 +1,6 @@
 class ApplicationController < ActionController::Base
-  # Центральный rescue для CanCanCan
+  layout :determine_layout
+
   rescue_from CanCan::AccessDenied do |exception|
     flash[:alert] = "Access denied: #{exception.message}"
     redirect_to root_path
@@ -7,8 +8,11 @@ class ApplicationController < ActionController::Base
 
   private
 
-  # Универсальный метод для вызова authorize! с нужным ресурсом
-  def authorize_cabinet!(cabinet)
-    authorize! :access, cabinet
+  def determine_layout
+    if devise_controller? && !admin_user_signed_in?
+      "active_admin_logged_out"
+    else
+      "application"
+    end
   end
 end

@@ -1,21 +1,19 @@
 class Doctor < ApplicationRecord
-  devise :database_authenticatable, :registerable, :recoverable,
-         :rememberable, :validatable,
-         authentication_keys: [:phone]
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :validatable
 
-  validates :phone, presence: true, uniqueness: true
+  include VirtualEmail  # подмена email через phone
 
   belongs_to :category
-  has_many :appointments
+  has_many :appointments, dependent: :destroy
   has_many :users, through: :appointments, source: :user
 
-  include VirtualEmail
-
+  # 🔍 Ransack
   def self.ransackable_attributes(auth_object = nil)
-    %w[id name phone category_id created_at updated_at]
+    %w[id phone created_at updated_at category_id]
   end
 
   def self.ransackable_associations(auth_object = nil)
-    %w[category appointments users]
+    %w[appointments users category]
   end
 end

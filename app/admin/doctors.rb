@@ -1,62 +1,55 @@
 ActiveAdmin.register Doctor do
-  permit_params :name, :phone, :category_id, :password, :password_confirmation, :avatar
+  permit_params :phone, :password, :password_confirmation, :category_id
 
   index do
     selectable_column
     id_column
-    column :name
     column :phone
     column :category
+    column("Open appoinments") { |doctor| doctor.appointments.where(closed: false).count }
+    column("Closed appoinments") { |doctor| doctor.appointments.where(closed: true).count }
     actions
   end
 
-  filter :name
+  filter :id
   filter :phone
   filter :category
+  filter :created_at
 
   form do |f|
     f.inputs do
-      f.input :name
       f.input :phone
-      f.input :category, as: :select, collection: Category.all.pluck(:name, :id)
       f.input :password
       f.input :password_confirmation
-      f.input :avatar, as: :file
+      f.input :category
     end
     f.actions
   end
 
   show do
     attributes_table do
-      row :name
       row :phone
       row :category
+      row :created_at
+      row :updated_at
     end
 
-    panel "Open Appointments" do
+    panel "Open appoinments" do
       table_for doctor.appointments.where(closed: false) do
-        column :user do |a| a.user&.name end
-        column :date
-        column :actions do |a|
-          link_to "Comment", edit_admin_appointment_path(a)
-        end
-      end
-    end
-
-    panel "Closed Appointments" do
-      table_for doctor.appointments.where(closed: true) do
-        column :user do |a| a.user&.name end
+        column :id
+        column("Patient") { |a| a.user.phone }
         column :date
         column :recommendation
       end
     end
-  end
 
-  controller do
-    def destroy
-      doctor = Doctor.find(params[:id])
-      doctor.appointments.where(closed: false).destroy_all
-      super
+    panel "Closed appoinments" do
+      table_for doctor.appointments.where(closed: true) do
+        column :id
+        column("Patient") { |a| a.user.phone }
+        column :date
+        column :recommendation
+      end
     end
   end
 end

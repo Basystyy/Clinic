@@ -4,10 +4,16 @@ ActiveAdmin.register User do
   index do
     selectable_column
     id_column
+    column :phone
+    column :created_at
+    column :updated_at
     actions
   end
 
+  filter :id
   filter :phone
+  filter :created_at
+  filter :updated_at
 
   form do |f|
     f.inputs do
@@ -16,10 +22,5 @@ ActiveAdmin.register User do
       f.input :password_confirmation
     end
     f.actions
-  end
-
-  controller do
-    before_action :authenticate_user!
-    load_and_authorize_resource
   end
 end

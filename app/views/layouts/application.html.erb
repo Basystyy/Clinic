@@ -9,19 +9,6 @@
   </head>
 
   <body>
-    <nav>
-      <% if admin_user_signed_in? || doctor_signed_in? || user_signed_in? %>
-        <%= button_to "Logout", logout_path, method: :delete, data: { confirm: "Are you sure?" } %>
-      <% end %>
-    </nav>
-
-    <% if notice %>
-      <p class="notice"><%= notice %></p>
-    <% end %>
-    <% if alert %>
-      <p class="alert"><%= alert %></p>
-    <% end %>
-
     <%= yield %>
   </body>
 </html>

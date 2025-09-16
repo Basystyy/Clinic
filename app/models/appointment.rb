@@ -1,19 +1,15 @@
 class Appointment < ApplicationRecord
   belongs_to :user
   belongs_to :doctor
-  validates :date, presence: true
-  validate :check_doctor_open_appointments
 
-  def check_doctor_open_appointments
-    if doctor && doctor.appointments.where(closed: false).count >= 10
-      errors.add(:base, "Doctor has no free slots (max 10 open appointments)")
-    end
+  validates :date, presence: true
+
+  # 🔍 Ransack
+  def self.ransackable_attributes(auth_object = nil)
+    %w[id user_id doctor_id date closed recommendation created_at updated_at]
   end
 
-  after_update :close_if_recommended, if: :recommendation_changed?
-
-  def close_if_recommended
-    self.closed = true if recommendation.present?
-    save
+  def self.ransackable_associations(auth_object = nil)
+    %w[user doctor]
   end
 end
