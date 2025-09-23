@@ -12,3 +12,9 @@ Doctor.create(phone: '+380501234569',
 AdminUser.create(phone: '+380987654322',
                  password: '111111',
                  password_confirmation: '111111')
+
+Appointment.create(user_id: 1,
+                    doctor_id: 1,
+                    date: Time.now,
+                    recommendation: "Test",
+                    closed: true)

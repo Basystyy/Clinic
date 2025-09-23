@@ -4,7 +4,7 @@ class Doctor < ApplicationRecord
 
   include VirtualEmail  # подмена email через phone
 
-  belongs_to :category
+  belongs_to :category, optional: true
   has_many :appointments, dependent: :destroy
   has_many :users, through: :appointments, source: :user
 

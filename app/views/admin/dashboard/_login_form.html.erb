@@ -1,0 +1,11 @@
+<h2>Login as <%= @role&.humanize || "Admin" %></h2>
+<%= form_tag admin_dashboard_login_path, method: :post do %>
+  <%= hidden_field_tag :role, @role %>
+  <%= label_tag :phone, "Phone" %>
+  <%= text_field_tag :phone %>
+  <%= label_tag :password, "Password" %>
+  <%= password_field_tag :password %>
+  <%= submit_tag "Login" %>
+<% end %>
+
+<%= link_to "Register as User", new_user_registration_path %>

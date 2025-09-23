@@ -1,0 +1,24 @@
+<h1>Doctor Dashboard</h1>
+<h2>Open Appointments</h2>
+<% if @open_appointments.present? %>
+  <% @open_appointments.each do |appointment| %>
+    <p><%= appointment.date %> - <%= appointment.user.phone %></p>
+    <%= form_with model: appointment, url: appointment_path(appointment), method: :patch do |form| %>
+      <%= form.text_area :comment, placeholder: "Add comment to close" %>
+      <%= form.submit "Comment and Close", class: "btn btn-comment" %>
+    <% end %>
+  <% end %>
+<% else %>
+  <p>No open appointments.</p>
+<% end %>
+
+<h2>Closed Appointments</h2>
+<% if @closed_appointments.present? %>
+  <% @closed_appointments.each do |appointment| %>
+    <p><%= appointment.date %> - <%= appointment.user.phone %> - Comment: <%= appointment.comment || "None" %></p>
+  <% end %>
+<% else %>
+  <p>No closed appointments.</p>
+<% end %>
+
+<%= button_to "Logout", destroy_doctor_session_path, method: :delete, class: "btn btn-logout" %>

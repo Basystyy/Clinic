@@ -1,28 +1,25 @@
+<h2><%= title %></h2>
 <% if appointments.any? %>
   <table>
     <thead>
       <tr>
         <th>Date</th>
-        <th>Name</th>
-        <th>Specialty</th>
-        <th>Comment</th>
+        <th>Doctor/Patient</th>
+        <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <% appointments.each do |appointment| %>
+      <% appointments.order(closed: :asc, date: :desc).each do |appointment| %>
         <tr>
-          <td><%= appointment.date %></td>
-          <td><%= appointment.user.name if defined?(appointment.user) %> <%= appointment.doctor.name if defined?(appointment.doctor) %></td>
-          <td><%= appointment.doctor.category.name if appointment.doctor && appointment.doctor.category %></td>
-          <td><%= appointment.recommendation.present? ? appointment.recommendation : "-" %></td>
+          <td><%= appointment.date.strftime('%Y-%m-%d %H:%M') %></td>
+          <td><%= appointment.doctor.name if appointment.doctor %> <%= appointment.user.phone if appointment.user %></td>
+          <td><%= appointment.closed? ? 'Closed' : 'Open' %></td>
           <td>
-            <% if appointment.recommendation.blank? && current_user.is_a?(Doctor) && appointment.doctor == current_user %>
-              <%= link_to "Comment", edit_appointment_path(appointment) %>
-            <% elsif appointment.recommendation.present? %>
+            <% if appointment.closed? %>
               <%= link_to "View Comment", appointment_path(appointment) %>
             <% else %>
-              <%= "-" %>
+              <%= link_to "Cancel", appointment_path(appointment), method: :delete, data: { confirm: "Are you sure?" } %>
             <% end %>
           </td>
         </tr>
@@ -30,5 +27,5 @@
     </tbody>
   </table>
 <% else %>
-  <p>No appointments found.</p>
+  <p>No appointments.</p>
 <% end %>

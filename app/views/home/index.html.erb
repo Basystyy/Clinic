@@ -1,0 +1,24 @@
+<h1>Welcome to Clinic</h1>
+
+<h2>Quick Access</h2>
+<div class="login-buttons">
+  <div class="row">
+    <%= button_to "Log in as patient", new_user_session_path, method: :get, class: "btn btn-patient" %>
+    <%= button_to "Register new patient", new_user_registration_path, method: :get, class: "btn btn-register" %>
+  </div>
+  <div class="row">
+    <%= button_to "Log in as doctor", new_doctor_session_path, method: :get, class: "btn btn-doctor" %>
+  </div>
+  <div class="row">
+    <%= button_to "Log in as Admin", "/admin/login", method: :get, class: "btn btn-admin" %>
+  </div>
+</div>
+
+<h2>Doctors</h2>
+<% if @doctors.present? %>
+  <% @doctors.each do |doctor| %>
+    <p><%= doctor.name %> - <%= doctor.category.name %> - Open slots: <%= 10 - doctor.appointments.where(closed: false).count %></p>
+  <% end %>
+<% else %>
+  <p>No doctors available.</p>
+<% end %>

@@ -1,9 +1,10 @@
 ActiveAdmin.register Doctor do
-  permit_params :phone, :password, :password_confirmation, :category_id
+  permit_params :name, :phone, :password, :password_confirmation, :category_id
 
   index do
     selectable_column
     id_column
+    column :name
     column :phone
     column :category
     column("Open appoinments") { |doctor| doctor.appointments.where(closed: false).count }
@@ -18,6 +19,7 @@ ActiveAdmin.register Doctor do
 
   form do |f|
     f.inputs do
+      f.input :name
       f.input :phone
       f.input :password
       f.input :password_confirmation

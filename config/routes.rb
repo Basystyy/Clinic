@@ -1,20 +1,15 @@
 Rails.application.routes.draw do
-  # Единый вход
-  devise_scope :user do
-    get  "sign_in",  to: "sessions#new",     as: :new_session
-    post "sign_in",  to: "sessions#create",  as: :session
-    delete "sign_out", to: "sessions#destroy", as: :destroy_session
-  end
-
-  # Регистрация только для пациентов
-  devise_for :users, skip: [:sessions]
-  
-  # Для докторов и админов — только учётка через админку
-  devise_for :doctors, skip: [:registrations, :sessions]
-  devise_for :admin_users, ActiveAdmin::Devise.config.merge(skip: [:registrations, :sessions])
-  ActiveAdmin.routes(self)
+  devise_for :users, controllers: { sessions: 'users/sessions' }
+  devise_for :doctors, controllers: { sessions: 'doctors/sessions' }
+  devise_for :admin_users, ActiveAdmin::Devise.config
 
   root "home#index"
 
-  get "up" => "rails/health#show", as: :rails_health_check
+  resources :doctors, :appointments
+
+  get "up", to: "rails/health#show", as: :rails_health_check
+  get '/patient_dashboard', to: 'patient_dashboard#index'
+  get '/doctor_dashboard', to: 'doctor_dashboard#index'
+
+  ActiveAdmin.routes(self)
 end

@@ -1,41 +1,26 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Clinic Admin Panel</title>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-
-    <%= stylesheet_link_tag "active_admin", media: "all" %>
-    <%= javascript_include_tag "active_admin" %>
-  </head>
-
-  <body class="active_admin_logged_out">
-
-    <div id="login" style="max-width: 400px; margin: 40px auto;">
-      <%= yield %>
+<head>
+  <title><%= content_for?(:title) ? yield(:title) : "Admin" %></title>
+  <%= csrf_meta_tags %>
+  <%= stylesheet_link_tag "active_admin", media: "all" %>
+  <%= javascript_include_tag "active_admin" %>
+</head>
+<body class="active_admin logged_out">
+  <div id="wrapper">
+    <div id="header">
+      <h1><%= link_to "Clinic Admin", root_path %></h1>
     </div>
-
-    <div id="doctors_list" style="margin: 40px auto; max-width: 800px; padding: 20px; background: #f9f9f9; border-radius: 8px; border: 1px solid #ddd;">
-      <h2 style="margin-bottom: 20px;">Available Doctors</h2>
-      <table style="width: 100%; border-collapse: collapse;">
-        <thead>
-          <tr style="text-align: left; border-bottom: 1px solid #ccc;">
-            <th style="padding: 8px;">Name</th>
-            <th style="padding: 8px;">Phone</th>
-            <th style="padding: 8px;">Category</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% Doctor.all.each do |doctor| %>
-            <tr style="border-bottom: 1px solid #eee;">
-              <td style="padding: 8px;"><%= doctor.name %></td>
-              <td style="padding: 8px;"><%= doctor.phone %></td>
-              <td style="padding: 8px;"><%= doctor.category&.name %></td>
-            </tr>
+    <div id="main_content_wrapper">
+      <div id="content_wrapper">
+        <div class="flashes">
+          <% flash.each do |type, message| %>
+            <%= content_tag :div, message, class: "flash flash_#{type}" %>
           <% end %>
-        </tbody>
-      </table>
+        </div>
+        <%= yield %>
+      </div>
     </div>
-
-  </body>
+  </div>
+</body>
 </html>

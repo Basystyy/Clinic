@@ -1,15 +1,14 @@
 class Appointment < ApplicationRecord
-  belongs_to :user
   belongs_to :doctor
-
+  belongs_to :user
   validates :date, presence: true
+  after_save :close_if_commented
 
-  # 🔍 Ransack
-  def self.ransackable_attributes(auth_object = nil)
-    %w[id user_id doctor_id date closed recommendation created_at updated_at]
-  end
+  private
 
-  def self.ransackable_associations(auth_object = nil)
-    %w[user doctor]
+  def close_if_commented
+    if comment.present? && !closed?
+      update(closed: true)
+    end
   end
 end

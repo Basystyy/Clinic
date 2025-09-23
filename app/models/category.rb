@@ -1,5 +1,5 @@
 class Category < ApplicationRecord
-  has_many :doctors, dependent: :destroy
+  has_many :doctors, dependent: :nullify
 
   # 🔍 Ransack
   def self.ransackable_attributes(auth_object = nil)
