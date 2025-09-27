@@ -6,7 +6,10 @@
     <div class="doctor-card">
       <p><%= doctor.name %> - <%= doctor.category.name %> - Open slots: <%= 10 - doctor.appointments.where(closed: false).count %></p>
       <% if 10 - doctor.appointments.where(closed: false).count > 0 %>
-        <%= button_to "Book", new_appointment_path(doctor_id: doctor.id), method: :get, class: "btn btn-book" %>
+        <%= button_to "Book",
+                        appointments_path(appointment: { doctor_id: doctor.id,
+                        date: Time.zone.now }),
+                        method: :post %>
       <% else %>
         <p class="no-slots">No free slots</p>
       <% end %>
@@ -35,7 +38,7 @@
           <td><%= appointment.doctor.name %></td>
           <td><%= appointment.doctor.category.name %></td>
           <td><%= appointment.closed? ? 'Closed' : 'Open' %></td>
-          <td><%= appointment.comment || '-' %></td>
+          <td><%= appointment.recommendation || '-' %></td>
           <% if !appointment.closed? %>
             <td><%= button_to "Cancel", appointment_path(appointment), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-cancel" %></td>
           <% end %>

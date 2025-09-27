@@ -1,12 +1,18 @@
 class AdminUser < ApplicationRecord
   devise :database_authenticatable,
          :recoverable, :rememberable, :validatable
+  
+  validates :phone, presence: true, uniqueness: true
 
-  include VirtualEmail
+  before_validation :set_dummy_email, if: -> { email.blank? }
 
-  # 🔍 Ransack
+  def set_dummy_email
+    self.email = "#{phone}@admin.local"
+  end
+
+    # Ransack
   def self.ransackable_attributes(auth_object = nil)
-    %w[id email created_at updated_at]
+    %w[id email phone created_at updated_at]
   end
 
   def self.ransackable_associations(auth_object = nil)

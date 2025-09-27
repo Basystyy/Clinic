@@ -1,33 +1,46 @@
 class AppointmentsController < ApplicationController
-  before_action :authenticate_user!, only: [:new, :create]
-  before_action :set_doctor, only: [:new, :create]
+  before_action :authenticate_user!, only: [:create, :destroy]
+  before_action :set_appointment, only: [:update]
 
-  def new
-    if @doctor.nil?
-      redirect_to patient_dashboard_path, alert: "Please select a doctor."
+  def create
+    @appointment = current_user.appointments.build(appointment_params)
+
+    if @appointment.save
+      redirect_to patient_dashboard_path,
+                  notice: "Appointment booked successfully!"
     else
-      @appointment = @doctor.appointments.build
+      redirect_to patient_dashboard_path,
+                  alert: @appointment.errors.full_messages.to_sentence
     end
   end
 
-  def create
-    @appointment = @doctor.appointments.build(appointment_params.merge(user_id: current_user.id))
-    if @appointment.save
-      redirect_to patient_dashboard_path, notice: "Appointment booked successfully!"
+  def destroy
+    @appointment = current_user.appointments.find(params[:id])
+    if @appointment.destroy
+      redirect_to patient_dashboard_path,
+            notice: "Appointment canceled!"
     else
-      render :new
+      redirect_to patient_dashboard_path,
+            alert: "Unable to cancel appointment."
+    end
+  end
+
+  def update
+    if @appointment.update(appointment_params)
+      redirect_to doctor_dashboard_path, notice: "Appointment updated successfully."
+    else
+      redirect_to doctor_dashboard_path, alert: "Failed to update appointment."
     end
   end
 
   private
 
-  def set_doctor
-    @doctor = Doctor.find_by(id: params[:doctor_id]) if params[:doctor_id].present?
-  rescue ActiveRecord::RecordNotFound
-    @doctor = nil
+  def set_appointment
+    @appointment = Appointment.find(params[:id])
   end
-
+  
   def appointment_params
-    params.require(:appointment).permit(:date, :doctor_id)
+    params.require(:appointment).permit(:doctor_id, :date,
+                                        :recommendation, :closed)
   end
 end

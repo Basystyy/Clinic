@@ -6,7 +6,7 @@ class Doctor < ApplicationRecord
 
   belongs_to :category, optional: true
   has_many :appointments, dependent: :destroy
-  has_many :users, through: :appointments, source: :user
+  has_many :users, through: :appointments
 
   # 🔍 Ransack
   def self.ransackable_attributes(auth_object = nil)

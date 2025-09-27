@@ -3,9 +3,13 @@
 <% if @open_appointments.present? %>
   <% @open_appointments.each do |appointment| %>
     <p><%= appointment.date %> - <%= appointment.user.phone %></p>
-    <%= form_with model: appointment, url: appointment_path(appointment), method: :patch do |form| %>
-      <%= form.text_area :comment, placeholder: "Add comment to close" %>
-      <%= form.submit "Comment and Close", class: "btn btn-comment" %>
+    <%= form_with model: appointment,
+                  url: appointment_path(appointment),
+                  method: :patch do |form| %>
+      <%= form.text_area :recommendation,
+                          placeholder: "Add recommendation to close" %>
+      <%= form.submit "Save and Close",
+                      class: "btn btn-comment" %>
     <% end %>
   <% end %>
 <% else %>
@@ -15,10 +19,13 @@
 <h2>Closed Appointments</h2>
 <% if @closed_appointments.present? %>
   <% @closed_appointments.each do |appointment| %>
-    <p><%= appointment.date %> - <%= appointment.user.phone %> - Comment: <%= appointment.comment || "None" %></p>
+    <p><%= appointment.date %> - <%= appointment.user.phone %>
+                                  - Comment: <%= appointment.recommendation
+                                  || "None" %></p>
   <% end %>
 <% else %>
   <p>No closed appointments.</p>
 <% end %>
 
-<%= button_to "Logout", destroy_doctor_session_path, method: :delete, class: "btn btn-logout" %>
+<%= button_to "Logout", destroy_doctor_session_path,
+                        method: :delete, class: "btn btn-logout" %>
