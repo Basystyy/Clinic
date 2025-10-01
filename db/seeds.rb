@@ -1,14 +1,17 @@
-Category.create(name: 'General Practitioner') unless Category.exists?(id: 1)
+Category.find_or_create_by!(name: 'General Practitioner')
 
-User.create(phone: '+380671234568',
-            password: '111111',
-            password_confirmation: '111111')
+User.find_or_create_by!(phone: '+380671234568') do |u|
+  u.password = '111111'
+  u.password_confirmation = '111111'
+end
 
-Doctor.create(phone: '+380501234569',
-              password: '111111',
-              password_confirmation: '111111',
-              category_id: 1)
+Doctor.find_or_create_by!(phone: '+380501234569') do |d|
+  d.password = '111111'
+  d.password_confirmation = '111111'
+  d.category_id = Category.find_by(name: 'General Practitioner').id
+end
 
-AdminUser.create(phone: '+380987654322',
-                 password: '111111',
-                 password_confirmation: '111111')
+AdminUser.find_or_create_by!(phone: '+380987654322') do |a|
+  a.password = '111111'
+  a.password_confirmation = '111111'
+end
