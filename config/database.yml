@@ -85,3 +85,4 @@ production:
   database: clinic_production
   username: clinic
   password: <%= ENV["CLINIC_DATABASE_PASSWORD"] %>
+  url: <%= ENV['DATABASE_URL'] %>
