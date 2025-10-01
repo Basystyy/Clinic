@@ -3,11 +3,11 @@ class DoctorDashboardController < ApplicationController
 
   def index
     @open_appointments = current_doctor.appointments
-                                   .where(closed: [false, nil])
-                                   .order(date: :desc)
+                                       .where(closed: false)
+                                       .order(date: :desc)
 
     @closed_appointments = current_doctor.appointments
-                                     .where(closed: true)
-                                     .order(date: :desc)
+                                         .where(closed: true)
+                                         .order(date: :desc)
   end
 end

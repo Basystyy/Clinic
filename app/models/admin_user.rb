@@ -10,7 +10,6 @@ class AdminUser < ApplicationRecord
     self.email = "#{phone}@admin.local"
   end
 
-    # Ransack
   def self.ransackable_attributes(auth_object = nil)
     %w[id email phone created_at updated_at]
   end

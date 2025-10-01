@@ -27,9 +27,11 @@ class AppointmentsController < ApplicationController
 
   def update
     if @appointment.update(appointment_params)
-      redirect_to doctor_dashboard_path, notice: "Appointment updated successfully."
+      redirect_to doctor_dashboard_path,
+                  notice: "Appointment updated successfully."
     else
-      redirect_to doctor_dashboard_path, alert: "Failed to update appointment."
+      redirect_to doctor_dashboard_path,
+                  alert: "Failed to update appointment."
     end
   end
 

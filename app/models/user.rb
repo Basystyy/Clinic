@@ -7,7 +7,6 @@ class User < ApplicationRecord
 
   include VirtualEmail
 
-  # 🔍 Разрешённые поля для поиска (админка)
   def self.ransackable_attributes(auth_object = nil)
     %w[id phone created_at updated_at]
   end

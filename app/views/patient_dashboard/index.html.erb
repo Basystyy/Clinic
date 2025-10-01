@@ -4,7 +4,10 @@
 <% if @doctors.present? %>
   <% @doctors.each do |doctor| %>
     <div class="doctor-card">
-      <p><%= doctor.name %> - <%= doctor.category.name %> - Open slots: <%= 10 - doctor.appointments.where(closed: false).count %></p>
+      <p><%= doctor.name %> - <%= doctor.category.name %>
+                            - Open slots: <%= 10 - doctor
+                            .appointments.where(closed: false)
+                            .count %></p>
       <% if 10 - doctor.appointments.where(closed: false).count > 0 %>
         <%= button_to "Book",
                         appointments_path(appointment: { doctor_id: doctor.id,
@@ -19,35 +22,22 @@
   <p>No doctors available.</p>
 <% end %>
 
-<h2>My Appointments</h2>
-<% if @appointments.present? %>
-  <table class="appointments-table">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Doctor</th>
-        <th>Specialty</th>
-        <th>Status</th>
-        <th>Comment</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @appointments.each do |appointment| %>
-        <tr class="<%= appointment.closed? ? 'closed' : 'open' %>">
-          <td><%= appointment.date.strftime('%Y-%m-%d %H:%M') %></td>
-          <td><%= appointment.doctor.name %></td>
-          <td><%= appointment.doctor.category.name %></td>
-          <td><%= appointment.closed? ? 'Closed' : 'Open' %></td>
-          <td><%= appointment.recommendation || '-' %></td>
-          <% if !appointment.closed? %>
-            <td><%= button_to "Cancel", appointment_path(appointment), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-cancel" %></td>
-          <% end %>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>No appointments.</p>
-<% end %>
+<h2>My Open Appointments</h2>
+<%= render partial: "shared/doctor_list",
+           locals: { appointments: @open_appointments,
+                     status: "Open" } %>
 
-<%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-logout" %>
+<h2>My Closed Appointments</h2>
+<%= render partial: "shared/doctor_list",
+           locals: { appointments: @closed_appointments,
+                     status: "Closed" } %>
+
+<h2>My Archived Appointments</h2>
+<%= render partial: "shared/doctor_list",
+           locals: { appointments: @archived_appointments,
+                     status: "Archived" } %>
+
+
+<%= button_to "Logout", destroy_user_session_path,
+                        method: :delete,
+                        class: "btn btn-logout" %>

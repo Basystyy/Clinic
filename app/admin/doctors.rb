@@ -7,8 +7,12 @@ ActiveAdmin.register Doctor do
     column :name
     column :phone
     column :category
-    column("Open appoinments") { |doctor| doctor.appointments.where(closed: false).count }
-    column("Closed appoinments") { |doctor| doctor.appointments.where(closed: true).count }
+    column("Open appoinments") { |doctor| doctor
+                                          .appointments.where(closed: false)
+                                          .count }
+    column("Closed appoinments") { |doctor| doctor
+                                            .appointments.where(closed: true)
+                                            .count }
     actions
   end
 

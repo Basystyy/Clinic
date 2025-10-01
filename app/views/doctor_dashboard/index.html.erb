@@ -20,8 +20,8 @@
 <% if @closed_appointments.present? %>
   <% @closed_appointments.each do |appointment| %>
     <p><%= appointment.date %> - <%= appointment.user.phone %>
-                                  - Comment: <%= appointment.recommendation
-                                  || "None" %></p>
+                               - Comment: <%= appointment
+                               .recommendation || "None" %></p>
   <% end %>
 <% else %>
   <p>No closed appointments.</p>

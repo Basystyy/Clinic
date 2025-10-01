@@ -4,6 +4,8 @@ ActiveAdmin.register_page "Patient Cabinet" do
   content do
     h2 "My Appointments"
     appointments = current_user.appointments.order(date: :desc)
-    render "shared/appointment_list", locals: { appointments: appointments, title: "All Appointments" }
+    render "shared/appointment_list",
+            locals: { appointments: appointments,
+            title: "All Appointments" }
   end
 end

@@ -1,12 +1,19 @@
 <h1>Book Appointment with <%= @doctor.name if @doctor.present? %></h1>
 <% if @doctor.nil? %>
-  <p>Doctor not found. <%= link_to "Back to Dashboard", patient_dashboard_path %></p>
+  <p>Doctor not found. <%= link_to "Back to Dashboard",
+                           patient_dashboard_path %></p>
 <% else %>
-  <%= form_with model: @appointment, url: appointments_path, method: :post, local: true do |form| %>
+  <%= form_with model: @appointment, url: appointments_path,
+                                     method: :post,
+                                     local: true do |form| %>
     <%= form.hidden_field :doctor_id, value: @doctor.id %>
     <%= form.label :date, "Select Date and Time" %>
-    <%= form.datetime_local_field :date, required: true, value: Time.current.strftime("%Y-%m-%dT%H:%M") %>
+    <%= form.datetime_local_field :date,
+                                  required: true,
+                                  value: Time
+                                  .current.strftime("%Y-%m-%dT%H:%M") %>
     <%= form.submit "Book Appointment", class: "btn btn-book" %>
   <% end %>
-  <%= button_to "Back", patient_dashboard_path, method: :get, class: "btn btn-back" %>
+  <%= button_to "Back", patient_dashboard_path,
+                        method: :get, class: "btn btn-back" %>
 <% end %>
